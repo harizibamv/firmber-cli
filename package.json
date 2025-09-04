@@ -1,12 +1,22 @@
 {
   "name": "firmber-cli",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "todos": "./index.js"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.6.0",
+    "commander": "^14.0.0",
+    "figlet": "^1.8.2",
+    "g": "^2.0.1"
+  }
 }
