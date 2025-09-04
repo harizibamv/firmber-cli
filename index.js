@@ -6,18 +6,23 @@ import figlet from 'figlet';
 const program = new Command();
 
 
-console.log(`
+console.log(chalk.white(`
 ████    ███████ ██ ██████  ███    ███ ██████  ███████ ██████    ████
 ██      ██      ██ ██   ██ ████  ████ ██   ██ ██      ██   ██     ██
 ██      █████   ██ ██████  ██ ████ ██ ██████  █████   ██████      ██
 ██      ██      ██ ██   ██ ██  ██  ██ ██   ██ ██      ██   ██     ██
 ████    ██      ██ ██   ██ ██      ██ ██████  ███████ ██   ██   ████ 
-`);
+`));
 
-console.log(`
-    Create FIRMBER.md files to configure your project.
-    Add documentation to the .firmber/documents/ directory for better results.   
-`);
+
+console.log(chalk.white(`
+┌──────────────────────────────────────────────────────────┐
+│  Create FIRMBER.md files to configure your project.      │
+│  Add documentation to the .firmber/documents/ directory  │
+│  for better results.                                     │
+└──────────────────────────────────────────────────────────┘
+`));
+
 
 program
     .name('firmber')
@@ -79,4 +84,51 @@ design
     console.log(`Channel: ${options["channel-type"]}`);
 })
 
+
+// Commander generate
+// Generate source code for different components
+const generate = program
+    .command('generate')
+    .description('')
+
+generate
+    .command('driver')
+    .description('Generates peripheral drivers (control intensive code)')
+    .requiredOption('--peripheral <name>', 'eg., UART, EDMA, McSPI')
+    .option('--mode <blocking|non-blocking|dma>',"Specify the operational mode.")
+    .option('--instance <id>',"Specify the peripheral instance (e.g., UART0).")
+    .action((options) => {
+        console.log(`[GEN] Driver for ${options.peripheral}`);
+        console.log(`  Mode         : ${options.mode}`);
+        console.log(`  Instance:  ${options.instance}`);
+        // TODO: Generate driver source files
+    })
+
+generate
+    .command("algorithm")
+    .description("Generate optimized algorithm code")
+    .requiredOption("--name <algo_name>","Algorithm (fft, fir_filter, matrix_multiply)")
+    .requiredOption("--target-core <core_id>", "Target core (DSP:C7x, NPU)")
+    .requiredOption("--data-type <type>","Data type (fp32|fxp16)")
+    .option("--optimize-for <goal>", "Optimize for (speed|size)", "speed")
+    .action((options) => {
+        console.log(`[GEN] Algorithm: ${options.name} `);
+        console.log(` Target Core: ${options.targetCore}`);
+        console.log(`  Data Type : ${options.dataType}`);
+        console.log(` Optimize : ${options.optimizeFor}`);
+    })
+generate
+  .command("memory")
+  .description("Generate memory management utilities")
+  .option("--strategy <type>", "Strategy (pool|dynamic)", "pool")
+  .option("--section <area>", "Memory section (DDR|L2SRAM)", "DDR")
+  .action((options) => {
+    console.log("[GEN] Memory Manager:");
+    console.log(`  Strategy : ${options.strategy}`);
+    console.log(`  Section  : ${options.section}`);
+    // TODO: Generate allocator/manager code
+  });
 program.parseAsync(process.argv);
+
+
+
