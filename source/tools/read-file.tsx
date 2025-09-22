@@ -4,6 +4,7 @@ import { readFile } from "fs";
 import { ThemeContext } from "@inkjs/ui";
 import React from "react";
 import { Box } from "ink";
+import ToolMessage from "../components/tool-message.js";
 
 
 const handler: ToolHandler = async (args:{path: string}) : Promise<string> {
@@ -29,6 +30,7 @@ const handler: ToolHandler = async (args:{path: string}) : Promise<string> {
 		throw error;
 	}
 };
+
 
 // Create a component that will re-render when theme changes
 const ReadFileFormatter = React.memo(({args}: {args: any}) => {
@@ -80,7 +82,6 @@ const ReadFileFormatter = React.memo(({args}: {args: any}) => {
 
 	return <ToolMessage message={messageContent} hideBox={true} />;
 });
-
 const formatter = async () : Promise<React.ReactElement> => {
 	return <>
 };
