@@ -1,36 +1,45 @@
 import { resolve } from "path";
-import { ToolDefinition, ToolHandler } from "../types/core.js";
+import type { ToolDefinition, ToolHandler } from "../types/core.js";
 import { readFile } from "fs";
-import { ThemeContext } from "@inkjs/ui";
+
+import { ThemeContext } from "../hooks/useTheme.js";
 import React from "react";
-import { Box } from "ink";
+import {Text,  Box } from "ink";
 import ToolMessage from "../components/tool-message.js";
 
 
-const handler: ToolHandler = async (args:{path: string}) : Promise<string> {
+
+const handler: ToolHandler = async (args: {path: string}): Promise<string> => {
 	const absPath = resolve(args.path);
+
 	try {
-		const content = await readFile(absPath,'utf-8');
-		if (content.length === 0){
+		const content = await readFile(absPath, 'utf-8');
+
+		// Check if file is empty (0 tokens)
+		if (content.length === 0) {
 			throw new Error(`File "${args.path}" exists but is empty (0 tokens)`);
 		}
+
 		const lines = content.split('\n');
 
+		// Return content with line numbers for precise editing
 		let result = '';
-		for (let i = 0;i< lines.length; i++){
-			const lineNum = String(i+1).padStart(4, ' ');
-			result += `${lineNum}: ${lines[i]}\n`
+		for (let i = 0; i < lines.length; i++) {
+			const lineNum = String(i + 1).padStart(4, ' ');
+			result += `${lineNum}: ${lines[i]}\n`;
 		}
 
-		return result.slice(0,-1);
-	}catch(error: any){
-		if(error.code === 'ENOENT'){
+		return result.slice(0, -1); // Remove trailing newline
+	} catch (error: any) {
+		// Handle file not found and other filesystem errors
+		if (error.code === 'ENOENT') {
 			throw new Error(`File "${args.path}" does not exist`);
 		}
+
+		// Re-throw other errors (including our empty file error)
 		throw error;
 	}
 };
-
 
 // Create a component that will re-render when theme changes
 const ReadFileFormatter = React.memo(({args}: {args: any}) => {
@@ -82,10 +91,29 @@ const ReadFileFormatter = React.memo(({args}: {args: any}) => {
 
 	return <ToolMessage message={messageContent} hideBox={true} />;
 });
-const formatter = async () : Promise<React.ReactElement> => {
-	return <>
+const formatter = async (args:any) : Promise<React.ReactElement> => {
+	return <ReadFileFormatter args={args} />
 };
 
 export const readFileTool: ToolDefinition = {
-	handler
-}
+	handler,
+	formatter,
+	requiresConfirmation:false,
+	config: {
+		type:'function',
+		function: {
+			name:'read_file',
+			description:'Read the contents of a file with line numbers (use line numbers with edit_file tool for precise editing)',
+			parameters: {
+				type:'object',
+				properties: {
+					path:{
+						type:'string',
+						description: "The path to the file to read.",
+					},
+				},
+				required: ['path']
+			},
+		},
+	},
+};
