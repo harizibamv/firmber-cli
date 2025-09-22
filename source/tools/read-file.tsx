@@ -30,39 +30,55 @@ const handler: ToolHandler = async (args:{path: string}) : Promise<string> {
 	}
 };
 
-
-const ReadFileFormatter = React.memo(({args} : {args: any}) => {
+// Create a component that will re-render when theme changes
+const ReadFileFormatter = React.memo(({args}: {args: any}) => {
 	const {colors} = React.useContext(ThemeContext)!;
 	const path = args.path || args.file_path || 'unknown';
-	const [fileInfo, setFileInfo] = React.useState({size:0, tokens : 0});
+	const [fileInfo, setFileInfo] = React.useState({size: 0, tokens: 0});
 
 	React.useEffect(() => {
 		const loadFileInfo = async () => {
-			try{
+			try {
 				const content = await readFile(resolve(path), 'utf-8');
 				const fileSize = content.length;
-				const estimatedTokens = Math.ceil(fileSize/4);
-				setFileInfo({size:fileSize, tokens:estimatedTokens});
-			}catch(error){
-				setFileInfo({size:0, tokens:0});
+				const estimatedTokens = Math.ceil(fileSize / 4);
+				setFileInfo({size: fileSize, tokens: estimatedTokens});
+			} catch (error) {
+				setFileInfo({size: 0, tokens: 0});
 			}
-		}
+		};
 		loadFileInfo();
 	}, [path]);
 
 	const messageContent = (
 		<Box flexDirection="column">
-			<Text color ={colors.tool}>⚒ read_file</Text>
+			<Text color={colors.tool}>⚒ read_file</Text>
+
 			<Box>
-				<Text color ={colors.secondary}>Path: </Text>
-				<Text color ={colors.white}>{path}</Text>
+				<Text color={colors.secondary}>Path: </Text>
+				<Text color={colors.white}>{path}</Text>
 			</Box>
+
 			<Box>
-				
+				<Text color={colors.secondary}>Size: </Text>
+				<Text color={colors.white}>
+					{fileInfo.size} characters (~{fileInfo.tokens} tokens)
+				</Text>
 			</Box>
+
+			{(args.offset || args.limit) && (
+				<Box marginTop={1}>
+					<Text color={colors.secondary}>Range: </Text>
+					<Text color={colors.primary}>
+						{args.offset && `from line ${args.offset} `}
+						{args.limit && `(${args.limit} lines)`}
+					</Text>
+				</Box>
+			)}
 		</Box>
 	);
 
+	return <ToolMessage message={messageContent} hideBox={true} />;
 });
 
 const formatter = async () : Promise<React.ReactElement> => {
