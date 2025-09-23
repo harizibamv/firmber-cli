@@ -3,7 +3,7 @@ import { MCPClient } from "../mcp/mcp-client.js";
 import { MCPToolAdapter } from "../mcp/mcp-tool-adapter.js";
 import { Tool, ToolHandler } from "../types/core.js";
 
-export class ToolManager{
+export class  ToolManager{
 	private mcpClient:MCPClient | null = null;
 	private mcpAdapter: MCPToolAdapter | null = null;
 	private toolRegistry: Record<string, ToolHandler> = {};

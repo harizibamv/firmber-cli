@@ -5,7 +5,7 @@ import React from "react";
 import { ThemeContext } from "../hooks/useTheme.js";
 import { Box, Text } from "ink";
 import { getLanguageFromExtension } from "../utils/programming-language-helper.js";
-import highlight from "cli-highlight";
+import {highlight} from "cli-highlight";
 import ToolMessage from "../components/tool-message.js";
 
 
