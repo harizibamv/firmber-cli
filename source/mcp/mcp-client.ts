@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { MCPInitResult, MCPServer, MCPTool } from "../types/mcp.js";
 import { shouldLog } from "../config/logging.js";
 import { Tool } from "../types/core.js";
+import { logError } from "../utils/message-queue.js";
 
 
 export class MCPClient {
@@ -187,5 +188,28 @@ export class MCPClient {
 		}
 	}
 
+	async disconnect(): Promise<void>{
+		for (const [serverName, client]  of this.clients.entries()){
+			try{
+				await client.close();
+				logInfo(`Disconnected from MCP server: ${serverName}`);
+			}catch(error){
+				logError(`Error disconnecting from ${serverName}: ${error}`);
+			}
+		}
+	}
+
+	getConnectedServers(): string[]{
+		return Array.from(this.clients.keys());
+	}
+
+	isServerConnected(serverName:string): boolean{
+		return this.clients.has(serverName);
+	}
+
+	getServerTools(serverName:string):MCPTool[]{
+		return this.serverTools.get(serverName) || [];
+	}
 
 }
+

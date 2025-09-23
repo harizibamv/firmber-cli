@@ -12,6 +12,8 @@ export default function App() {
 	// Use extracted hooks
 	const appState = useAppState();
 
+	// Create 
+
   return (
     <>
       <Text>Hello, {name}!</Text>
