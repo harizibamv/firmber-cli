@@ -48,6 +48,8 @@ export interface LLMClient{
 	getContextSize():number;
 	getAvailableModels(): Promise<string[]>;
 	chat(messages:Message[], tools: Tool[]):Promise<any>;
+	chatStream(message: Message[], tools:Tool[]):AsyncIterable<any>;
+	clearContext(): Promise<void>;
 }
 
 export type ProviderType = "openrouter" | "openai-compatible";

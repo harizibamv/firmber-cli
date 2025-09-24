@@ -17,6 +17,8 @@
 	],
 	"dependencies": {
 		"@inkjs/ui": "^2.0.0",
+		"@langchain/core": "^0.3.77",
+		"@langchain/openai": "^0.6.13",
 		"@mishieck/ink-titled-box": "^0.3.0",
 		"@modelcontextprotocol/sdk": "^1.18.1",
 		"cli-highlight": "^2.1.11",

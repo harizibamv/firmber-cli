@@ -2,6 +2,8 @@ import React from 'react';
 import { Text } from 'ink';
 import { Select } from "@inkjs/ui";
 import { useAppState } from './app/hooks/useAppState.js';
+import { getThemeColors } from './config/themes.js';
+import { setGlobalMessageQueue } from './utils/message-queue.js';
 
 type Props = {
 	name: string | undefined;
@@ -12,7 +14,22 @@ export default function App() {
 	// Use extracted hooks
 	const appState = useAppState();
 
-	// Create 
+	// Create theme context value
+	const themeContextValue = {
+		currentTheme: appState.currentTheme,
+		colors:getThemeColors(appState.currentTheme),
+		setCurrentTheme: appState.setCurrentTheme,
+	}
+
+	// Initialize global message queue on Component mount
+	React.useEffect(()=> {
+		setGlobalMessageQueue(appState.addToChatQueue);
+	}, []);
+
+	// Setup chat handler
+	const chatHandler = useChatHandler({
+		
+	})
 
   return (
     <>

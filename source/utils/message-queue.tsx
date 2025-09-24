@@ -8,6 +8,11 @@ let globalAddToChatQueue: ((component: React.ReactNode) => void) | null = null;
 let componentKeyCounter = 0;
 
 
+// Set the global chat queue function
+export function setGlobalMessageQueue(addToChatQueue: (component: React.ReactNode) =>  void){
+	globalAddToChatQueue = addToChatQueue;
+}
+
 function getNextKey(): string{
 	componentKeyCounter++;
 	return `global-msg-${componentKeyCounter}`;

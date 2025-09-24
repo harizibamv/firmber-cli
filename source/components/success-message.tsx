@@ -5,7 +5,7 @@ import { useTheme } from '../hooks/useTheme.js';
 import { useTerminalWidth } from '../hooks/useTerminalWidth.js';
 
 
-export default function SucessMessage({
+export default function SuccessMessage({
 	message,
 	hideTitle = false,
 	hideBox = false,
